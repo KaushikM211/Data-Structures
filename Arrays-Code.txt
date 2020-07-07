@@ -1,0 +1,184 @@
+/*
+ * @author - Kaushik.M
+ * Date : 05.06.2020
+ * */
+
+public class Array_DS {
+	int[] arr;
+	public void swap(int[] a, int i,int j) {
+		if(i == j)
+			return;
+		else {
+			int temp = a[i];
+			a[i] = a[j]; 
+			a[j] = temp;
+		}
+	}
+	public int[] bubble_sort(int[] a) {
+		 for(int lui = a.length - 1;lui > 0;lui--) {
+			 for(int i = 0;i < a.length-1;i++) //lui - last unsorted index.
+			 {
+				 if(a[i] > a[i+1]) 
+					 swap(a, i, i+1);
+			 }
+		 }
+		 return a;
+	}
+	
+	public int[] insertion_sort(int[] a) {
+		for(int fui = 1;fui < a.length; fui++) {//fui-first unsorted index
+			int newElement = a[fui];
+			int i;
+			for(i = fui; i > 0 && a[i-1] > newElement; i--) {
+				a[i] = a[i-1];
+			}
+			a[i] = newElement;
+		}
+		return a;
+	}
+	
+	public int[] selection_sort(int[] a) {
+		
+		for(int lui = a.length - 1;lui > 0; lui--) {//lui-last unsorted index
+			int largest = 0;
+			for(int i = 1;i < lui + 1;i++) {
+				 if(a[i] > a[largest]) {
+					 largest = i;					 
+				 }
+			}
+			swap(a, largest,lui);
+		}
+		return a;
+	}
+	
+	public int[] shell_sort(int[] a) {
+		for(int gap = a.length/2;gap > 0; gap /= 2) {
+		//Insertion sort
+			for(int i = gap; i < a.length; i++) {
+				int newElement = a[i];
+				int j = i;
+				while(j >= gap && a[j-gap]> newElement) {
+					a[j] = a[j-gap];
+					j -= gap;
+				}
+				a[j] = newElement;
+			}
+		
+		}
+		return a;
+	}
+	
+	public void merge(int[] a,int start,int mid,int end) {
+		if(a[mid-1] <= a[mid])
+			return;
+		int i = start;
+		int j = mid;
+		int tempIndex = 0;
+		
+		int[] temp = new int[end - start];
+		while(i<mid && j<end) {
+			temp[tempIndex++] = a[i]<=a[j]?a[i++]:a[j++];
+		}
+		System.arraycopy(a, i, a, start+tempIndex, mid-i);
+		System.arraycopy(temp, 0, a, start, tempIndex);
+	}
+	
+	public void Merge_sort(int[] a,int start,int end) {
+		if(end-start < 2)
+			return;
+		int mid = (start + end)/2;
+		Merge_sort(a, start, mid);
+		Merge_sort(a,mid,end);
+		merge(a,start,mid,end);
+		arr = a;
+	}
+	
+	public int partition(int[] a,int start, int end) {
+		int pivot = a[start];
+		int i = start;
+		int j = end;
+		while(i<j) {
+			while(i<j &&a[--j] >= pivot);
+			if(i<j)
+				a[i] = a[j];
+			while(i<j&&a[++i] <= pivot);
+			if(i<j)
+				a[j] = a[i];
+		}
+		a[j] = pivot;
+		return j;
+	}
+	public void Quick_sort(int[] a,int start, int end) {
+		if(end-start<2)
+			return;
+		int pivotIndex = partition(a,start,end);
+		Quick_sort(a,start,pivotIndex);
+		Quick_sort(a,pivotIndex+1,end);
+		arr = a;
+	}
+	public void display(int[] a) {
+		for(int i=0;i<arr.length;i++) {
+			System.out.println(a[i]);
+		}
+	}
+	
+	public void counting_sort(int[] a,int min,int max) {
+		int[] countArray = new int[max - min + 1];
+		for(int i = 0;i<a.length;i++) {
+			countArray[a[i] - min]++;
+		}
+		int j = 0;
+		for(int i = min;i <= max;i++) {
+			while(countArray[i-min] > 0) {
+				a[j++] = i;
+				countArray[i-min]--;
+			}
+		}
+		arr = a;
+	}
+	
+	public void Radix_sort(int[] a, int radix, int width) {
+		for(int i = 0; i < width; i++) {
+			radixSingleSort(a, i , radix);
+		}
+		arr = a;
+	}
+	
+	public int getDigit(int pos, int value, int radix) {
+		return value/(int) Math.pow(radix, pos)%radix;
+	}
+	public void radixSingleSort(int[] a, int pos, int radix) {
+		int numitems = a.length;
+		int[] countArray = new int[radix];
+		for(int value:a) {
+			countArray[getDigit(pos, value,radix)]++;
+		}
+		for(int j = 1;j < radix; j++) {
+			countArray[j] += countArray[j-1];
+		}
+		int[] temp = new int[numitems];
+		for(int tempIndex = numitems - 1; tempIndex>= 0; tempIndex--) {
+			temp[--countArray[getDigit(pos, a[tempIndex],radix)]] = a[tempIndex];
+		}
+		for(int t = 0;t < numitems;t++) {
+			a[t] = temp[t];
+		}
+	}
+	
+	public static void main(String[] args) {
+		Array_DS A = new Array_DS();  
+		int[] arr = {20,35,-15,7,55,1,-22};
+		//int[] arr2 = {2,5,9,8,2,8,7,10,4,3};
+		//int[] arr3 = {4725,4586,1330,8792,1594,5729};
+		int[] sortedArray = A.bubble_sort(arr);
+		//int[] sortedArray = A.selection_sort(arr);
+		//int[] sortedArray = A.insertion_sort(arr);
+		//int[] sortedArray = A.shell_sort(arr);
+
+		//A.Merge_sort(arr, 0, arr.length);
+		//A.Quick_sort(arr, 0, arr.length);
+		//A.counting_sort(arr2,1,10);
+		//A.Radix_sort(arr3, 10, 4);
+		A.display(sortedArray);
+	}
+}
