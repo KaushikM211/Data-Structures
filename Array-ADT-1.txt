@@ -1,0 +1,133 @@
+package ASSIGNMENT;
+import java.util.*;
+
+public class Assignment_1_AIE19036 {
+    public static void main(String[] args) { 
+        Array A=new Array(5);
+        A.Get_Values();
+        A.append(5);
+        A.sort();
+        if(A.search(5)==-1)
+            System.out.println("Element 5 not found in the array");
+        else
+            System.out.println("The index at which 5 is:"+A.search(5));
+
+    }
+}
+
+class Array{
+    int[] arr;
+    Array()
+    {
+        arr=new int[10];	
+    }
+
+    Array(int size)
+    {
+        arr=new int[size];
+    }
+
+    public void Get_Values() {
+        System.out.println("Enter Values:");
+        Scanner s=new Scanner(System.in);
+        for(int i=0;i<arr.length;i++)
+        {
+            arr[i]=s.nextInt();
+        }
+        s.close();
+    }
+
+    public void append(int n) 
+    {
+        int N=arr.length;
+        int[] arr1=new int[N+1];
+        for(int i=0;i<N;i++){
+            if(i<N-1)
+                arr1[i]=arr[i];
+            else
+                arr1[i+1]=n;
+
+        }
+        arr=new int[N+1];
+        for(int j=0;j<N+1;j++){
+            arr[j]=arr1[j];
+        }
+        display();    
+    }
+
+    public void sort()  
+    {
+        int N=arr.length;   
+        for(int i=0;i<N;i++)
+        {
+            for(int j=i;j<N;j++) 
+            {
+                if(arr[i]>arr[j]) {
+                    int t=arr[i];
+                    arr[i]=arr[j];
+                    arr[j]=t;
+                }
+            }
+        }
+        display(); 	
+    }
+
+    public int search(int val) {
+        int loc=-1;
+        for(int i=0;i<arr.length;i++) 
+        {
+            if(arr[i]==val) {
+                loc=i;
+            }
+        }
+        return loc;
+    }
+
+    public void insert(int pos,int val)
+    {       
+        int N=arr.length;
+        int[] arr1=new int[N+1];
+        for(int i=0;i<=N;i++) {
+            if(i==pos-1)
+            {
+                arr1[i]=val;
+            }
+            else
+                arr1[i]=arr[i];	
+        }
+        arr=new int[N+1];
+        for(int i=0;i<=N;i++)
+            arr[i]=arr1[i];
+    }
+
+    void display()
+    {   System.out.println("Array:");
+        for(int i=0;i<arr.length;i++)
+        {System.out.println(arr[i]);
+        }
+    }
+
+    public void val_del(int val,int freq)  
+    {   int N=arr.length;
+        int count=1; 
+	int j = 0;	
+        int[] arr1=new int[N-freq];
+        while(count<freq) {
+            for(int i=0;i<N;i++) {
+                if(arr[i]!=val)
+                    arr1[j++]=arr[i];
+                else
+                {
+                    count++;
+                    continue;
+                }
+
+            }
+
+        }
+        arr=new int[arr1.length];
+        for(int k=0;k<arr1.length;k++){
+            arr[k]=arr1[k];
+        }
+    }
+}

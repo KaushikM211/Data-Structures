@@ -1,0 +1,182 @@
+/*
+ * Assignment 11 - Complete Binary Tree 
+ * By : KAUSHIK.M (CB.EN.U4AIE19036)
+ */
+
+package ASSIGNMENT;
+
+public class CBT {
+	int rank = -1, root = 0;
+	int[] bst;
+	int default_Size = 100;
+
+	public CBT(int size) {
+		bst = new int[size];
+		rank = 0;
+	}
+
+	//Appending of values inside the array
+	public void append(int value){
+		if(rank == bst.length) {
+			int[] a =  new int[bst.length + 1];
+			a = bst;
+			a[bst.length] = value;
+			bst = a;
+			rank++;
+		}
+		else {
+			bst[rank++] = value;
+		}
+	}
+
+	//Function to go to the Parent
+	public int toParent(int i) {		
+		return ((i - 1)/2);
+	}
+
+	//Function to go to left of tree
+	public int toLeft(int i) {
+		return ((2*i + 1));
+	}
+
+	//Function to go to right of tree
+	public int toRight(int i) {
+		return (2*i + 2);
+	}
+
+	//Function to check whether Array is empty or not
+	public boolean isEmpty() {
+		return rank == -1;
+	}
+
+	//Function to delete element at a particular index.
+	public int delete(int key) {
+		if(key >= rank)	{
+			System.err.println("Index out of bound");
+			return -1;
+		}
+		else {
+			int temp = 0;
+			int[] a = new int[rank-1];
+			for (int i = 0, k = 0; i < rank; i++) { 
+				if (i == key) { 
+					temp = bst[i];
+					continue; 
+				}   
+				a[k++] = bst[i]; 
+			} 
+			bst = a;
+			rank--;
+			return temp;	
+		}
+	}
+
+	//Function to display in Pre order manner
+	public void Pre_Order(int r) {
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			System.out.print(bst[r] + " ");
+			Pre_Order(toLeft(r));
+			Pre_Order(toRight(r));
+
+		}
+	}		
+
+	//Function to display in Post order manner
+	public void Post_Order(int r){
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			Post_Order(toLeft(r));
+			Post_Order(toRight(r));
+			System.out.print(bst[r] + " ");
+		}
+
+	}
+
+	//Function to display the array as such
+	public void display() {
+		if(isEmpty())
+			System.err.println("Complete Binary Tree is not created");
+		else {
+			for(int ind = 0;ind < rank; ind++) {
+				System.out.print(bst[ind] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	//Code to give In_Order Printing
+	public void In_Order(int r) {
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			Post_Order(toLeft(r));
+			System.out.print(bst[r] + " ");
+			Post_Order(toRight(r));			
+		}
+	}
+
+	//Code to give Breadth Wise Traversal
+	public void Breadth_Out(){
+		for(int i = 0, k = 0; i < rank; i++) {
+			if(i == toParent(k)) {
+				System.out.print(bst[i] + " ");
+			}
+			else {
+				if(i == toLeft(k)) {
+					System.out.print(bst[i] + " ");	
+					k++;
+				}
+				if(i == toRight(k - 1)) {
+					System.out.print(bst[i] + " ");
+				}	
+			}
+		}
+	}
+
+	//Test Main
+	public static void main(String[] args) throws Exception{
+		CBT c = new CBT(10);
+		c.append(10);
+		c.append(6);
+		c.append(4);
+		c.append(5);
+		c.append(15);
+		c.append(16);
+		System.out.println("Showing The Array representation:");
+		c.display();
+		System.out.println("Breadthwise Representation:");
+		c.Breadth_Out();
+		System.out.println();
+		System.out.println("Pre-Order Representation:");
+		c.Pre_Order(0);
+		System.out.println();
+		System.out.println("Post-Order Representation:");
+		c.Post_Order(0);
+		System.out.println();
+		System.out.println("In-Order Representation:");
+		c.In_Order(0);
+		System.out.println();
+		System.out.println("Deleting the element in index 0:" + c.delete(0));
+
+
+	}
+
+}

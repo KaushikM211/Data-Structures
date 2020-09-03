@@ -1,0 +1,166 @@
+package ASSIGNMENT;
+/*
+ * Implementation of a SET using Complete Binary Tree
+ * By : KAUSHIK.M | CB.EN.U4AIE19036
+ */
+
+public class Set_CBT {
+	int rank = -1, root = 0;
+	int[] bst;
+	int default_Size = 100;
+
+	public Set_CBT(int size) {
+		bst = new int[size];
+		rank = 0;
+	}
+
+	//Appending of values inside the array
+	public void append(int value){
+		if(rank == bst.length) {
+			int[] a =  new int[bst.length + 1];
+			a = bst;
+			a[bst.length] = value;
+			bst = a;
+			rank++;
+		}
+		else {
+			bst[rank++] = value;
+		}
+	}
+
+	//Function to go to the Parent
+	public int toParent(int i) {		
+		return ((i - 1)/2);
+	}
+
+	//Function to go to left of tree
+	public int toLeft(int i) {
+		return ((2*i + 1));
+	}
+
+	//Function to go to right of tree
+	public int toRight(int i) {
+		return (2*i + 2);
+	}
+
+	//Function to check whether Array is empty or not
+	public boolean isEmpty() {
+		return rank == -1;
+	}
+
+
+	//Function to display in Pre order manner
+	public void Pre_Order(int r) {
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			System.out.print(bst[r] + " ");
+			Pre_Order(toLeft(r));
+			Pre_Order(toRight(r));
+
+		}
+	}		
+
+	//Function to display in Post order manner
+	public void Post_Order(int r){
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			Post_Order(toLeft(r));
+			Post_Order(toRight(r));
+			System.out.print(bst[r] + " ");
+		}
+
+	}
+
+	//Function to display the array as such
+	public void display() {
+		if(isEmpty())
+			System.err.println("Complete Binary Tree is not created");
+		else {
+			for(int ind = 0;ind < rank; ind++) {
+				System.out.print(bst[ind] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	//Code to give In_Order Printing
+	public void In_Order(int r) {
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			Post_Order(toLeft(r));
+			System.out.print(bst[r] + " ");
+			Post_Order(toRight(r));			
+		}
+	}
+	//Code to check existence of an element-can also be used as search tool 
+	public int notexist(int val) {
+		int a = 0;
+		for(int i = 0; i < rank ; i++) {
+			if(bst[i] == val)
+			{a ++;					
+			}
+		}
+		return a;
+	}
+
+	//Code for Union
+	public Set_CBT Union(Set_CBT t1, Set_CBT t2) {
+		Set_CBT c = new Set_CBT(100);
+		int[] a1, a2, u = new int[t1.rank + t2.rank];
+		a1 = t1.bst; a2 = t2.bst;
+		int k = 0;
+		for(int i = 0; i < t1.rank ; i++)
+			u[k++] = a1[i];
+		for(int j = 0; j < t2.rank ; j++)
+			u[k++] = a2[j];
+
+		for(int i = 0;i < k; i++) {
+			int t = u[i];
+			if(c.notexist(t) == 0)
+				c.append(t);
+		}
+		return c;
+	}
+
+	//Test Main
+	public static void main(String[] args) {
+		Set_CBT c1 = new Set_CBT(5);
+		Set_CBT c2 = new Set_CBT(6);
+		c1.append(10);
+		c1.append(4);
+		c1.append(6);
+		c1.append(2);
+		c2.append(2);
+		c2.append(5);
+		c2.append(7);
+		System.out.println("The first tree In_Order:");
+		c1.In_Order(0);
+		System.out.println();
+		System.out.println("The second tree In_Order:");
+		c2.In_Order(0);
+		System.out.println();
+		Set_CBT c3 = new Set_CBT(10);
+		c3 = c3.Union(c1, c2);
+		System.out.println("Printing the Union set of the the two trees created In_Order:");
+		c3.In_Order(0);
+	}
+}
+

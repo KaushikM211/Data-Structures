@@ -1,0 +1,204 @@
+package ASSIGNMENT;
+/*
+ * This is the interface for stack
+ * By : Kaushik.M - CB.EN.U4AIE19036
+ */
+public interface Stacks_ADT {
+	void push(int value);
+	int pop();
+	void display();
+	boolean isEmpty();
+}
+
+
+
+
+package ASSIGNMENT;
+/*
+ *Stack as Double linked list 
+ */
+public class Stack_Dlist implements Stacks_ADT{
+	public class Node{
+		int data;
+		Node next;
+		Node prev;
+
+		public Node(int data) {
+			this.data = data;
+			next = null;
+			prev = null;
+		}
+
+	};
+	
+	Node start = null,last = null;
+	
+	//Pushing into Stack
+	@Override
+	public void push(int value) {
+		if(isEmpty()) {
+			last = new Node(value);
+			start = last;
+		}
+		else
+		{
+			last.next = new Node(value);
+			Node temp = last;
+			last = last.next;
+			last.prev = temp;			
+		}
+		
+	}
+
+	//Popping out of Stack
+	@Override
+	public int pop() {
+		if(isEmpty()){
+			System.out.println("Cannot pop ... Stack empty");
+			return -1;
+		}
+		else {
+		int temp = last.data;
+		last = last.prev;
+		last.next = null;
+		return temp;
+		}
+	}
+
+	//Displaying the stack
+	@Override
+	public void display() {
+		
+		Node point = last;
+		while(point != null) {
+			System.out.print(point.data + " ");
+			point = point.prev;
+		}
+		System.out.println();
+	}
+
+	//Check whether stack is empty
+	@Override
+	public boolean isEmpty() {
+		return start == null;
+	}
+	
+	//Test Main
+	public static void main(String[] args) {
+		Stacks_ADT s = new Stack_Dlist();
+		s.push(10);
+		s.push(15);
+		s.push(17);
+		System.out.println("Stack as Double List:");
+		s.display();
+		System.out.println("Popped element : " + s.pop());
+		System.out.println("Stack as Double List:");
+		s.display();	
+		
+	}
+
+}
+
+
+
+-------------------------------------------------------------------------
+
+-------------------------------------------------------------------------
+
+package ASSIGNMENT;
+/*
+ * This is the interface for queue
+ * By : Kaushik.M - CB.EN.U4AIE19036
+ */
+public interface Queue_ADT {
+	public void enqueue(int data1);
+	public int dequeue();
+	public boolean isEmpty();
+	public void display();	 
+}
+
+package ASSIGNMENT;
+/*
+ * Queue as Double linked list
+ */
+
+public class Queue_Dlist implements Queue_ADT{
+	public class Node{
+		int data;
+		Node next;
+		Node prev;
+
+		public Node(int data) {
+			this.data = data;
+			next = null;
+			prev = null;
+		}
+
+	};
+	Node front = null, rear = null;
+	
+	// Inserting in the queue
+	@Override
+	public void enqueue(int data1) {
+		if(isEmpty()) {
+			rear = new Node(data1);
+			front = rear;
+		}
+		else    {   
+			Node temp = new Node(data1);
+			temp.prev = rear;
+			rear.next = temp;
+			rear = rear.next;
+			}
+		
+	}
+
+	// Deleting in the queue
+	@Override
+	public int dequeue() {
+		if(isEmpty()){
+			System.out.println("Queue List is Empty");
+			front = rear = null; 	
+			return -1;
+		}
+		else{
+			int temp = front.data;
+			front = front.next;
+			front.prev = null;
+			return temp;
+		}
+	}
+
+	//Checking whether queue is empty
+	@Override
+	public boolean isEmpty() {
+		return front == null;
+	}
+
+	//Displaying the queue
+	@Override
+	public void display() {
+		Node point = front;
+		while(point != null) {
+			System.out.print(point.data + " ");
+			point = point.next;
+		}
+		System.out.println();
+	}
+
+	//Test Main
+	public static void main(String[] args) {
+		Queue_ADT q = new Queue_Dlist();
+		q.enqueue(10);
+		q.enqueue(4);
+		q.enqueue(-8);
+		System.out.println("Queue List : ");
+		q.display();
+		System.out.println("Element deleted : " + q.dequeue());
+		System.out.println("Queue List : ");
+		q.display();
+	}
+}
+
+
+

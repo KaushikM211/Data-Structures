@@ -1,0 +1,146 @@
+package dsa1;
+
+public interface List {
+	void append(int val1);
+	void print();
+	void insert(int val2,int pos1);
+	void replace(int val3,int val4);
+	void delete(int val5);
+	int search(int val6);
+
+}
+
+
+
+public class LinkdList implements List{
+	public class Node{
+		int data;
+		Node next;
+
+		public Node(int Val) {
+			data=Val;
+			next=null;
+		}
+
+	};
+	Node start=null,last=null;
+
+	@Override
+	public void append(int val1) {
+
+		if(start==null) {
+			last=new Node(val1);
+			start=last;
+
+
+		}
+		else    {   
+			last.next=new Node(val1);
+			last=last.next;
+			last.next=null;
+
+		}
+
+
+	}
+
+	@Override
+	public void insert(int val2, int pos1) {
+		int r=0;
+		Node temp=start;
+		while(temp!=null) {
+			if(r==pos1-1) {
+				Node temp1=new Node(val2);
+				Node a=temp.next;
+				temp.next=temp1;
+				temp1.next=a;
+			}
+			r++;
+			temp=temp.next;
+		}
+
+
+	}
+
+
+	@Override
+	public void print() {
+		if(start==null) {
+			System.out.println("No linked list created");
+		}
+		else {
+			Node temp=start;
+			while(temp!=null) {
+				System.out.print(temp.data+" ");
+				temp=temp.next;
+			}
+		}
+		System.out.println();
+
+
+	}
+	public static void main(String[] args) {
+		LinkdList l1=new LinkdList();
+		l1.append(5);
+		l1.append(10);
+		l1.append(20);
+		l1.print();
+		l1.insert(15,2);
+		l1.print();
+		l1.replace(5,0);
+		l1.print();
+		//l1.delete(10);
+		//l1.print();  
+		if(l1.search(20)!=-1)
+			System.out.println("Element found at node:"+l1.search(20));
+		else
+			System.out.println("Element not found");
+	}
+
+	@Override
+	public void replace(int val3, int val4) {
+		Node temp=start;
+		while(temp!=null) {
+			if(temp.data==val3) {
+				temp.data=val4;
+			}
+			temp=temp.next;
+		}
+
+	}
+
+	@Override
+	public void delete(int val5) {
+		Node temp=start;
+		while(temp!=null) {
+			if(temp.data==val5) {
+				Node a=temp.next;		
+				temp.next=a;
+
+			}
+			temp=temp.next;
+
+		}
+	}
+
+	@Override
+	public int search(int val6) {
+		int r=-1;
+		Node temp=start;
+		while(temp!=null) {
+			if(temp.data==val6) {
+				break;
+			}
+			++r;
+			temp=temp.next;
+		}
+		return r;
+
+	}
+
+
+
+
+}
+
+

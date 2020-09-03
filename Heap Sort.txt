@@ -1,0 +1,139 @@
+package ASSIGNMENT;
+/*
+ *  Implementing Heap Insert using Heap_Sort() function
+ * 	DONE BY : KAUSHIK.M - CB.EN.U4AIE19036
+ *  
+ */
+
+public class CBT_Heap {
+	int rank = -1, root = 0;
+	int[] bst;
+	int default_Size = 100;
+	public CBT_Heap() {
+		bst = new int[default_Size];
+		rank = 0;
+	}
+	public CBT_Heap(int size) {
+		bst = new int[size];
+		rank = 0;
+	}
+
+	//Appending of values inside the array
+	public void append(int value){
+		if(rank == bst.length) {
+			int[] a =  new int[bst.length + 1];
+			a = bst;
+			a[bst.length] = value;
+			bst = a;
+			rank++;
+		}
+		else {
+			bst[rank++] = value;
+		}		
+		Heap_Sort();
+	}
+
+	//Function to go to the Parent
+	public int toParent(int i) {		
+		return ((i-1)/2);
+	}
+
+	//Function to go to left of tree
+	public int toLeft(int i) {
+		return ((2*i + 1));
+	}
+
+	//Function to go to right of tree
+	public int toRight(int i) {
+		return (2*i + 2);
+	}
+
+	//Function to check whether Array is empty or not
+	public boolean isEmpty() {
+		return rank == -1;
+	}
+
+	//Function to delete element at a particular index.
+	public int delete(int key) {
+		if(key >= rank)	{
+			System.err.println("Index out of bound");
+			return -1;
+		}
+		else {
+			int temp = 0;
+			int[] a = new int[rank-1];
+			for (int i = 0, k = 0; i < rank; i++) { 
+				if (i == key) { 
+					temp = bst[i];
+					continue; 
+				}   
+				a[k++] = bst[i]; 
+			} 
+			bst = a;
+			rank--;
+			return temp;	
+		}
+	}
+
+	//Function to display in Pre order manner
+	public void Pre_Order(int r) {
+		if(isEmpty()) {
+			System.err.println("Complete Binary Tree is not created");
+		}
+		else if(r >= rank) {
+			return;
+		}
+		else
+		{	
+			System.out.print(bst[r] + " ");
+			Pre_Order(toLeft(r));
+			Pre_Order(toRight(r));
+
+		}
+	}		
+
+	//Function to display the array as such
+	public void display() {
+		if(isEmpty())
+			System.err.println("Complete Binary Tree is not created");
+		else {
+			for(int ind = 0;ind < rank; ind++) {
+				System.out.print(bst[ind] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
+	//Function to Heap Sort
+	void Heap_Sort() {
+		int r = rank - 1;
+		while(r != 0) {
+			int p = toParent(r);
+			if(bst[p] > bst[r]) {
+				int t = bst[p];
+				bst[p] = bst[r];
+				bst[r] = t;
+			}
+			r = p;
+		}
+	}
+	
+	//Test Main
+	public static void main(String[] args) {
+		CBT_Heap c = new CBT_Heap(10);
+		c.append(3);
+		c.append(2);
+		c.append(1);
+		c.append(7);
+		c.append(8);
+		c.append(4);
+		c.append(10);
+		c.append(16);
+		c.append(12);
+		System.out.print("Heapify Output:");
+		c.Pre_Order(0);
+		System.out.println();		
+
+	}
+
+}

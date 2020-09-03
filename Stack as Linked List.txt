@@ -1,0 +1,129 @@
+package ASSIGNMENT;
+
+//The interface Stacks for the implementation of Stack in array and Linked List
+public interface Stacks {
+	public void push(int value);
+	public int pop();
+	public void display();
+	public boolean isEmpty();
+}
+
+package ASSIGNMENT;
+
+// Stack as Linked List
+public class Stack_List implements Stacks{
+	class Node{
+		int data;
+		Node next;
+		
+		public Node(int data,Node n) {
+			this.data = data;
+			next = n;
+		}
+	}
+	
+	Node top = null;
+	
+	@Override
+	public void push(int value) {
+		top = new Node(value, top);		
+	}
+
+	@Override
+	public boolean isEmpty() {
+		if(top == null)
+			return true;
+		else
+			return false;
+	}
+	
+	@Override
+	public int pop() {
+		if(isEmpty())
+		{System.out.println("Cannot Pop: Underflow");
+			return 0;	
+		}
+		else
+			{Node temp = top;
+			top = top.next;
+			return temp.data;
+			}
+	}
+
+	@Override
+	public void display() {
+		if(isEmpty()) {
+			System.out.println("No Stack Formed");
+			}
+		else
+		{
+			Node temp = top;
+			while(temp != null) {
+				System.out.print(temp.data + " ");
+				temp = temp.next;
+			}
+			System.out.println();
+			
+		}
+	}
+
+}
+
+
+package ASSIGNMENT;
+import java.util.*;
+
+//PostFix computation
+public class PostFix_Compute {
+	public String getValue() {
+		
+		Scanner s = new Scanner(System.in);
+		System.out.println("Enter the expression:");
+		String str = s.next();
+		s.close();
+		return str;		
+	}
+	
+	public int Compute(String s, Stacks s6) {
+		int val = 0;
+		char[] temp = s.toCharArray();
+		for(int i = 0;i < temp.length; i++) {
+			if(temp[i] == '+') {
+				int a = s6.pop();
+				int b = s6.pop();
+				s6.push(a+b);
+			}
+			else if(temp[i] == '-') {
+				int a = s6.pop();
+				int b = s6.pop();
+				s6.push(b-a);
+			}
+			else if(temp[i] == '*') {
+				int a = s6.pop();
+				int b = s6.pop();
+				s6.push(b*a);
+			}
+			else if(temp[i] == '/') {
+				int a = s6.pop();
+				int b = s6.pop();
+				s6.push(b/a);
+			}		
+			else
+			{   int a = temp[i] - 48;
+				s6.push(a);
+			
+			}	
+		}
+		val = s6.pop();
+		return val;
+		
+	}
+	public static void main(String[] args) {
+		PostFix_Compute p1 = new PostFix_Compute();
+		Stacks L = new Stack_List();
+		String input = p1.getValue();
+		int answer = p1.Compute(input, L);
+		System.out.println("The Computed value is:" + answer);
+	}
+
+}

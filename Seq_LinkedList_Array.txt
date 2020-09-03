@@ -1,0 +1,206 @@
+package dsa1;
+//CB.EN.U4AIE19036  
+//@author:KAUSHIK.M
+public interface Seq {
+	public void append(int val1);
+	public boolean isEmpty();
+	public void insert(int pos,int val2);
+	public void delete(int val3);
+	public void print();
+
+}
+
+//package dsa1;
+//CB.EN.U4AIE19036  
+//@author:KAUSHIK.M
+public class ArrayList implements Seq{
+	int[] arr;
+	int size;
+
+	public final static int DEFAULT_LENGTH=100;
+
+	ArrayList(){
+		arr=new int[DEFAULT_LENGTH];
+		size=0;
+	}
+	ArrayList(int length){
+		arr=new int[length];
+		size=0;
+	}
+	@Override
+	public void append(int val1) {
+		if(size<=arr.length)
+		{
+			arr[size++]=val1;
+		}
+		else
+		{
+			int[] arr1=new int[2*arr.length];
+			for(int i=0;i<arr.length;i++) {
+				arr1[i]=arr[i];
+			}
+			arr1[arr.length]=val1;
+			arr=arr1;
+		}
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return(size==0);
+	}
+
+	@Override
+	public void insert(int pos, int val2) {
+		{   int arr1[]=new int[2*arr.length]; 
+		for(int k=0;k<arr.length;k++) {
+			if(pos-1==k)
+			{arr1[k]=val2;
+			for(int i=k;i<arr.length;i++)  
+				arr1[i+1]=arr[i];
+			size++;
+			break;
+
+			}
+			arr1[k]=arr[k];
+
+		}
+		arr=arr1;
+		}
+	}
+
+	@Override
+	public void print() {
+		for(int j=0;j<size;j++) {
+			System.out.print(arr[j]+" ");
+		}
+		System.out.println();
+	}
+
+	public static void main(String[] args) {
+		Seq A=new LinkedList();
+		System.out.println(A.isEmpty());
+		A.append(10);
+		A.append(-6);
+		A.append(4);
+		A.append(0);
+		A.append(12);
+		A.print();
+		A.insert(2,-7);
+		A.print();
+		A.delete(-6);
+		A.print();
+		System.out.println(A.isEmpty());
+	}
+	@Override
+	public void delete(int val3) {
+		int flag=0;
+		int[] arr1=new int[arr.length];
+		for(int i=0;i<arr.length;i++) {
+			if(arr[i]!=val3){
+				arr1[i]=arr[i];
+
+
+			}
+			else {
+
+				for(int j=i;j<arr.length-1;j++)
+				{
+					arr1[j]=arr[j+1];
+				}
+				flag++;
+				break;
+
+			}
+
+		}
+		if(flag==0) {
+			System.out.println("Data not found");
+		}
+		arr=arr1;
+
+	}
+}
+
+//package dsa1;
+//CB.EN.U4AIE19036  
+//@author:KAUSHIK.M
+public class LinkedList implements Seq{
+
+	class Node{
+		int data;
+		Node next;
+
+		Node(int value){
+			data=value;
+			next=null;
+		}
+	};
+	Node start=null,last=null; 
+	@Override
+	public void append(int val1) {
+		if(isEmpty()==true) {
+			start=last=new Node(val1);
+		}
+		else {
+			last.next=new Node(val1);
+			last=last.next;
+		}
+
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return (start==null);
+	}
+
+	@Override
+	public void insert(int pos, int val2) {
+		int r=0;
+		Node temp=start;
+		while(temp!=null) {
+			if(r==pos-1) {
+				Node temp1=new Node(val2);
+				Node a=temp.next;
+				temp.next=temp1;
+				temp1.next=a;
+			}
+			r++;
+			temp=temp.next;
+		}
+
+	}
+
+	@Override
+	public void print() {
+		Node temp=start;
+		while(temp!=null) {
+			System.out.print(temp.data+" ");
+			temp=temp.next;
+		}
+		System.out.println();
+
+	}
+
+	@Override
+	public void delete(int val3) {
+		int flag=0;
+		Node temp=start;
+		while(temp!=null) {
+			if(val3==temp.data)
+			{
+				Node a=temp.next;
+				a.next=temp.next.next;
+				flag++;
+			}
+			temp=temp.next;	
+
+		}
+		if(flag==0)
+		{
+			System.out.println("Data not found");
+		}
+
+	}
+
+}
+

@@ -1,0 +1,124 @@
+package ASSIGNMENT;
+/*QUEUE LIST IMPLEMENTATION
+ * BY:KAUSHIK.M (CB.EN.U4AIE19036)
+ */
+public class Queue_List implements Queue_ADT{
+	
+	class Node {
+		int value;
+		Node next;
+		public Node(int value) {
+			this.value = value;
+			next = null;
+		}
+		
+	};
+	Node front = null, rear = null;
+	
+	//Inserting the Queue List at the end
+	@Override
+	public void enqueue(int data) {
+		
+		if(isEmpty()) {
+			rear = new Node(data);
+			front = rear;
+		}
+		else    {   
+			rear.next=new Node(data);
+			rear=rear.next;
+					}
+		}
+	
+	//Deleting the Queue List from front
+	@Override
+	public int dequeue() {
+		if(isEmpty()){
+			System.out.println("Queue List is Empty");
+			front = rear = null; 	
+			return -1;
+		}
+		else{
+			int temp = front.value;
+			front = front.next;
+			return temp;
+		}
+	}
+	@Override
+	public boolean isEmpty() {
+		return front == null;
+	}
+	
+	//Displaying the Queue List
+	@Override
+	public void display() {
+		Node temp = front;
+		while(temp != null) {
+			System.out.print(temp.value + " ");
+			temp = temp.next;
+		}
+		System.out.println();
+	}
+	
+	//Deleting from the end of Queue List
+	@Override
+	public int endel() {
+		if(isEmpty()){
+			System.out.println("Queue List is Empty");
+			front = rear = null; 	
+			return -1;
+		}
+		else{
+			Node temp = front;
+			Node t = rear;
+			while(temp!=null) {
+				if(temp.next == rear)
+					{
+					rear = temp;
+					rear.next = null;
+					}
+				temp = temp.next;
+			}
+			return t.value;
+		}
+	}
+	
+	//Inserting from the front of Queue List
+	@Override
+	public void insert(int data) {
+		
+		if(isEmpty()) {
+			rear = new Node(data);
+			front = rear;
+		}
+		else    {   
+			Node temp = new Node(data);
+			temp.next = front;
+			front = temp;
+					}
+		
+	}
+	
+	//Test Main
+	public static void main(String[] args) {
+		Queue_ADT q = new Queue_List();
+		q.enqueue(10);
+		q.enqueue(6);
+		q.enqueue(5);
+		System.out.println("Queue List:");
+		q.display();
+		System.out.println("Deleted element:" + q.dequeue());
+		System.out.println("Queue List:");
+		q.display();
+		System.out.println("Deleted element:" + q.dequeue());
+		System.out.println();
+		q.display();
+		q.insert(16);
+		System.out.println("Inserting element fron the front:");
+		q.display();
+		System.out.println("Deleted element from the end:" + q.endel());
+		q.display();
+		
+	}
+
+	
+}

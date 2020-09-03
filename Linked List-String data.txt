@@ -1,0 +1,109 @@
+package ASSIGNMENT;
+import java.io.*;
+
+public class LinkdList_Str {
+// Creating node class for linked list
+	class Node{
+		String s;
+		Node next;
+		public Node(String s) {
+			this.s = s;
+			next = null;
+		}
+	};
+	Node start = null, last = null;
+
+//Function to append the linked list
+	public void append(String s1) {
+		if(isEmpty() == true) {
+			start = last = new Node(s1);
+		}
+		else
+		{
+			last.next = new Node(s1);
+			last = last.next;
+		}
+
+	}
+
+//Checking whether the linked list is empty or not.
+	public boolean isEmpty() {
+		return (start == null);
+	} 
+
+//Displaying the linked list
+	public void disp() {
+		if(isEmpty()) {
+			System.out.println("No linked list created");
+		}
+		else {
+			Node temp = start;
+			while(temp != null && temp.s != null) {
+				System.out.println(temp.s);
+				temp = temp.next;
+			}
+		}
+		System.out.println();
+	}
+
+//Searching string in the linked list
+	public void Search(String s4){
+		Node temp = start;
+		int i = 1, flag = -1;
+		while(temp != null && temp.s != null) {
+			if(temp.s.contains(s4))
+			{System.out.println(s4 + " is present in the data at node:" + i);
+			System.out.println(temp.s);
+			System.out.println();
+			flag ++;
+			}
+			temp = temp.next;
+			i++;
+		}
+		if(flag == -1)
+			System.out.println(s4 + " is not present in the text file");
+	}
+
+//Sorting the linked list	
+	public void Sort() {
+		String s3 = start.s.substring(0, 17);
+		Node temp = start; 
+		Node point = temp;
+		temp = temp.next;
+		while(temp != null && temp.s != null) {
+			Node p = temp;
+			while(p != null && p.s != null) {
+				if(s3.compareTo(p.s.substring(0, 17)) >= 0)
+				{Node t = p;
+				p = point;	
+				point = t;
+				}
+				p = p.next;
+			}
+			temp =temp.next;
+
+		}
+
+	}
+	
+// Test void main
+	public static void main(String[] args) throws IOException {
+		LinkdList_Str l1 = new LinkdList_Str();
+		BufferedReader br = new BufferedReader(new FileReader("D:\\M.K\\CSE(AI)-SOFTWAREs\\eclipse\\MK\\bin\\STREAMS\\logsample.txt"));
+		String str;
+		do
+		{
+			str = br.readLine();
+			l1.append(str);
+		}while(str != null);
+
+		br.close();
+		l1.disp();
+		l1.Search("WARN");
+		l1.Search("INFO");
+		l1.Search("ERROR");
+		l1.Sort();
+		System.out.println("The sorted Linked List is:");
+		l1.disp();
+	}
+}
