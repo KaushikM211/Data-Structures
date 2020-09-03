@@ -1,0 +1,241 @@
+package Practice_DS;
+public class TreeNode {
+	//All required variables are declared
+	public char nodechar;
+	static int size;
+	int frequency;
+	StringBuffer code;
+	TreeNode left,right,root;
+	//This constructor is used when we know only the character and its frequency
+	TreeNode(char ch,int fr){
+		nodechar=ch;
+		frequency=fr;
+		size++;
+		left = right = root = null;
+	}
+	//This constructor is used when we know the character and its frequency along with right and left node
+	TreeNode(char ch,int fr,TreeNode left,TreeNode right){
+		nodechar=ch;
+		frequency=fr;
+		size++;
+		this.left=left;
+		this.right=right;
+		root = this;
+	}
+}
+
+
+
+
+
+----------------------------------------------
+
+package Practice_DS;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+public class Huffman {
+	//All required variables are declared
+	private String inputtext, outputtext;
+	private byte[] byteinput;
+	private int total_alphabets[], totalchars;
+	public TreeNode tnodes[];
+	private PrintWriter out;
+	//Constructor to open the input file
+	Huffman(String path){
+		try {			byteinput=Files.readAllBytes(Paths.get(path));//To take everything that is in the text file
+			inputtext=new String(byteinput).replaceAll("[^a-z]", "");
+		} 
+		catch (IOException e) {
+			return;		
+		}
+		outputtext = inputtext;		
+		total_alphabets = new int[26];//To store all alphabets
+	}
+	//This function calculates the frequency of occurrence of characters
+	void letter_freq() {
+		//iterating over the input text to find the frequency of character in the input text
+		for (char element : inputtext.toCharArray()) {
+			try{
+				//maps the frequency to the corresponding alphabet
+				total_alphabets[element - 'a']++;
+			} 
+			catch (ArrayIndexOutOfBoundsException e){
+				return;
+			}
+		}		
+	}
+	//this function is used to create a queue which helps in building the tree
+	void makeQueue(){
+		for(int i=0;i<total_alphabets.length;i++){
+			if(total_alphabets[i]!=0){
+				totalchars++;
+			}
+		}
+		tnodes=new TreeNode[totalchars*2-1];
+		for(int i=0;i<total_alphabets.length;i++){
+			if(total_alphabets[i]!=0){
+				insertNode(new TreeNode((char)(i+'a'),total_alphabets[i]));
+			}
+		}		
+	}
+	//This function helps in creating a node of a tree with max heap
+	void insertNode(TreeNode node){		
+		int i, j;	
+		for(i = 0; i < TreeNode.size-1; i++){
+			if(tnodes[i].frequency > node.frequency)
+				break;
+		}
+		for(j = TreeNode.size-2; j>=i; j--){
+			tnodes[j+1]=tnodes[j];
+		}
+		tnodes[i] = node;	
+		maxHeapify(tnodes[tnodes.length-1]);
+	}
+	//Function to go to the Parent
+	public TreeNode toParent(int pos) {		
+		return tnodes[(pos-1)/2];
+	}
+	//Making Max Heap based on node and length of tree node
+	private void maxHeapify(TreeNode t1) 
+	{ 
+		TreeNode r = t1;
+		int pos = tnodes.length-1;
+		while(r != null && pos != 0) {
+			TreeNode p = toParent(pos);
+			if(p.frequency <= r.frequency) {
+				TreeNode t = p;
+				p = r;
+				r = t;
+			}
+			r = p;
+			pos = (pos-1)/2;
+		}
+	}
+	//This function helps in building the complete tree
+	void buildTree(){
+		int looping = tnodes.length-3;
+		//This iteration is used to insert the nodes of the tree that contains the character and the key
+		for(int i = 0;i <= looping; i +=2){		
+			insertNode(new TreeNode('-',tnodes[i].frequency + tnodes[i+1].frequency,tnodes[i],tnodes[i+1]));			
+		}
+		// To display the character's corresponding frequency and code like a table format.
+		System.out.println("Character\tFrequency\tCode");
+		createCode(tnodes[tnodes.length-1],new StringBuffer());
+	}
+	//Here we create the binary codes based on movement from the root
+	void createCode(TreeNode node,StringBuffer codestring){
+		//Moving on left from the parent we append 0
+		if(node.left != null){
+			codestring.append(0);
+			createCode(node.left,codestring);
+			codestring.deleteCharAt(codestring.length()-1);
+		}
+		//Moving on right from parent we append 1
+		if(node.right != null){
+			codestring.append(1);
+			node.right.code=codestring;
+			createCode(node.right,codestring);
+			codestring.deleteCharAt(codestring.length()-1);
+		}
+		//If we reach a leaf node, we end the binary code for the character and display it	
+		if(node.left == null&& node.right == null){
+			node.code = codestring;
+			outputtext = outputtext.replaceAll(String.valueOf(node.nodechar), codestring.toString());
+			System.out.println(node.nodechar+"\t\t"+node.frequency+"\t\t"+node.code);
+		}}
+	//This function is used to create an output file and store the code for the characters.
+	void makeOutputFile(String outputpath){
+		try {			
+			out = new PrintWriter(new FileWriter(outputpath));
+			out.println(outputtext);
+			System.out.println("Saved output in file " + outputpath);
+		} catch (IOException e) {
+			System.out.println("cannot open/create file :"+outputpath);
+		}
+		out.close();
+	}
+	//Function which is used to retrieve the data from the encoded file and print the output
+	void printDecoded(String outputfile, TreeNode node) throws IOException {
+		BufferedReader fileReader;
+		fileReader = new BufferedReader(new FileReader(outputfile));
+		String s;
+		String ans = "";
+		TreeNode curr = node;
+		boolean flag = true;
+		while (flag == true)
+		{	
+			s = fileReader.readLine();
+			if (s == null)
+				flag = false;
+			else {
+				flag = true;
+				for(int i = 0; i < s.length();i++) {
+					if(s.charAt(i)=='0')
+						curr = curr.left;
+					else if(s.charAt(i)=='1')
+						curr = curr.right;
+					if(curr.left == null && curr.right == null) {
+						ans = ans + curr.nodechar;
+						curr = node.root;
+					}
+				}
+			}
+		}
+		fileReader.close();
+		System.out.println(ans);
+	}
+	//Function is used to print the encoded text
+	void printEncoded(){
+		System.out.println("Output :\n" + outputtext);
+	}
+	
+//Used to display Inorder traversal
+	public void print(TreeNode r) {
+		if(r != null)	
+		{			
+			print(r.left);
+			if(r.frequency>0 && (r.nodechar >=97 && r.nodechar <=122))
+				System.out.print("Char:"+r.nodechar+" ,freq:"+r.frequency+";");
+			print(r.right);
+
+		}
+		else
+			return;
+	}
+}
+
+	
+	
+	
+	
+----------------------------------------------------------------------------------
+
+package Practice_DS;
+import java.io.IOException;
+//Testing class
+public class MainClass {
+	public static void main(String[] args) throws IOException{
+		//Create a Huffman Object
+		Huffman h = new Huffman("C:\\Users\\Prasanth .S.N\\Desktop\\DS1-Project\\input.txt");
+		//We call the function to find frequency of each character
+		h.letter_freq();
+		//Create the queue for enabling us to create a MaxHeap
+		h.makeQueue();
+		//Building the tree based on the MaxHeap
+		h.buildTree();
+		//Create output file at specified path location
+		h.makeOutputFile("C:\\Users\\Prasanth .S.N\\Desktop\\DS1-Project\\output.txt");
+		//Displaying the encoded code in the output
+		h.printEncoded();
+		//We retrieve the characters and display it calling with the root.	
+		h.printDecoded("output.txt", h.tnodes[h.tnodes.length-1]);
+	}
+}
+
+
+
